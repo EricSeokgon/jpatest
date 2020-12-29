@@ -1,48 +1,38 @@
 package com.ncom.jpa.web.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
-@Table
-public class User implements Serializable {
+@Data
+public class User{
 
     @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @Column
+    @Column(length = 10, nullable = false)
     private String name;
 
-    @Column
-    private String phone;
-
-    @Column
+    @Column(length = 100, nullable = false)
     private String email;
 
-    @Column
-    private LocalDateTime createdDate;
+    private String address;
 
-    @Column
-    private LocalDateTime updateDate;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_at;
 
-    @Builder
-    public User(Long id, String name, String phone, String email, LocalDateTime createdDate, LocalDateTime updateDate) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.createdDate = createdDate;
-        this.updateDate = updateDate;
-    }
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date latest_login_at;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private List<UserRole> userRole;
+
 }
